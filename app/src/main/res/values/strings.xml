@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">WantToKnow</string>
-    <string name="warning_login">Email and Paswword should have values</string>
-    <string name="warning_signup">Email and Paswword should have values</string>
+    <string name="warning_login">Email and Paswword cannot be empty</string>
+    <string name="warning_signup">Email and Paswword cannot be empty</string>
 </resources>
