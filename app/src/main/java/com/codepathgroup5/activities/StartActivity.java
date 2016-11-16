@@ -42,7 +42,7 @@ public class StartActivity extends AppCompatActivity {
 
             ParseUser.logInInBackground(userName,password,new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
-                    if (e == null) {
+                    if (e != null) {
                         //Connection successful
                         Log.d(TAG,"Connection successful");
                         Intent intent = new Intent(StartActivity.this, SearchActivity.class);
@@ -85,7 +85,7 @@ public class StartActivity extends AppCompatActivity {
 
             user.signUpInBackground(new SignUpCallback() {
                 public void done(ParseException e) {
-                    if (e == null) {
+                    if (e != null) {
                         //Connection successful
                         Log.d(TAG,"Connection successful");
                         Intent intent = new Intent(StartActivity.this, SearchActivity.class);
