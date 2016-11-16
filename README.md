@@ -1,4 +1,4 @@
-# wanttoknow
+# Want to Know
 # Project 3 - *Want To Know*
 
 **Want To Know app** is an android app. For example: If a user is wants to learn dancing or singing or organize a party, the user, generally opens the Yelp App and checks all the places that are favourable for him/her to pursue their interest and contacts every place and its timings. With the "Wanttoknow" app, the user can select the list of the places, from the overall list and send a message to all of the selected places at once, stating that the user wants to learn dancing or the user wants to organize a birthday party.
