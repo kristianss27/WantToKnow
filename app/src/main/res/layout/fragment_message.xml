@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <EditText
+        android:id="@+id/etMessage"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:cursorVisible="true"
+        android:gravity="top|left"
+        android:textSize="13sp"
+        android:textStyle="normal"
+        />
+
+    <Button
+        android:id="@+id/btnSend"
+        android:textColor="@android:color/white"
+        android:text="@string/send_message"
+        android:background="@color/colorPrimary"
+        android:layout_alignParentRight="true"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:layout_below="@+id/etMessage"
+        android:layout_centerHorizontal="true"
+        android:onClick="sendMessage"
+        />
+
+</RelativeLayout>

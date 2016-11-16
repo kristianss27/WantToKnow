@@ -12,6 +12,7 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -32,5 +33,13 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     //Facebook sdk
-    compile 'com.facebook.android:facebook-android-sdk:4.+'
+    //compile 'com.facebook.android:facebook-android-sdk:4.+'
+
+    compile 'com.android.support:design:24.2.1'
+
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.0'
+
+    compile 'com.yelp.clientlib:yelp-android:2.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

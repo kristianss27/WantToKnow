@@ -71,8 +71,6 @@ public class StartActivity extends AppCompatActivity {
             String email = userName;
             String password = etPassword.getText().toString().toLowerCase();
 
-            //Declare a variable to get the response
-            final String[] result = new String[2];
             //Initializes the ParseUser Object using its properties
             ParseUser user = new ParseUser();
             //User name is required
@@ -83,7 +81,7 @@ public class StartActivity extends AppCompatActivity {
             user.setEmail(email);
 
             //other fields can be set just like with ParseObject
-            //user.put("phone", getPhone());
+            user.put("phone", "123");
 
             user.signUpInBackground(new SignUpCallback() {
                 public void done(ParseException e) {

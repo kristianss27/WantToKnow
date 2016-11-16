@@ -2,4 +2,11 @@
     <string name="app_name">WantToKnow</string>
     <string name="warning_login">Email and Paswword cannot be empty</string>
     <string name="warning_signup">Email and Paswword cannot be empty</string>
+    <string name="send_message">Send</string>
+    <string-array name="message_options">
+        <item>Write a general message to</item>
+        <item>Write different messages to everyone</item>
+    </string-array>
+    <string name="search_title">Search</string>
+    <string name="action_sort">Sort by Name</string>
 </resources>

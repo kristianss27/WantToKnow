@@ -31,6 +31,10 @@
             </intent-filter>
         </activity>
         <activity android:name="com.codepathgroup5.activities.SearchActivity"></activity>
+        <activity android:name="com.codepathgroup5.activities.ContactActivity"></activity>
+        <activity android:name="com.codepathgroup5.activities.DetailActivity"
+            android:parentActivityName="com.codepathgroup5.activities.SearchActivity">
+        </activity>
     </application>
 
 </manifest>
