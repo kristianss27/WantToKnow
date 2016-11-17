@@ -39,7 +39,12 @@ public class BusinessCardAdapter extends RecyclerView.Adapter<BusinessCardAdapte
         Business business = businessList.get(i);
         businessViewHolder.vName.setText(business.name());
         businessViewHolder.vPhone.setText(business.phone());
-        businessViewHolder.vAddress.setText(business.location().address().get(0));
+        if(business.location().address()!=null && business.location().address().size()>0) {
+            businessViewHolder.vAddress.setText(business.location().address().get(0));
+        }
+        else{
+            businessViewHolder.vAddress.setText(R.string.no_address);
+        }
 
         Picasso.with(businessViewHolder.vImage.getContext())
                 .load(business.imageUrl())

@@ -9,4 +9,6 @@
     </string-array>
     <string name="search_title">Search</string>
     <string name="action_sort">Sort by Name</string>
+    <string name="no_conection">Conection failed</string>
+    <string name="no_address">No Address</string>
 </resources>
