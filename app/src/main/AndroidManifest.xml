@@ -30,11 +30,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.codepathgroup5.activities.SearchActivity"></activity>
-        <activity android:name="com.codepathgroup5.activities.ContactActivity"></activity>
-        <activity android:name="com.codepathgroup5.activities.DetailActivity"
-            android:parentActivityName="com.codepathgroup5.activities.SearchActivity">
-        </activity>
+        <activity android:name="com.codepathgroup5.activities.SearchActivity" />
+        <activity android:name="com.codepathgroup5.activities.ContactActivity" />
+        <activity android:name="com.codepathgroup5.activities.DetailActivity" />
+        <activity android:name="com.codepathgroup5.activities.PersonalListActivity"/>
     </application>
 
 </manifest>

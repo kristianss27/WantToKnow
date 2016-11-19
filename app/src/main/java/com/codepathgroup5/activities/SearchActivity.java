@@ -3,19 +3,24 @@ package com.codepathgroup5.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codepathgroup5.adapters.BusinessCardAdapter;
+import com.codepathgroup5.adapters.ItemTouchHelperAdapter;
+import com.codepathgroup5.adapters.ItemTouchHelperCallback;
 import com.codepathgroup5.listeners.EndlessRecyclerViewScrollListener;
 import com.codepathgroup5.utilities.NetworkUtil;
 import com.codepathgroup5.utilities.Utility;
@@ -30,15 +35,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
+public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,BusinessCardAdapter.AdapterListener,ItemTouchHelperAdapter
+    {
     private static final String TAG = "SearchActivity";
     private static final String SAVE_KEY_BUSINESS_LIST = ":MainActivity:businessList";
+    private final int LEFT = 16, RIGHT = 32;
+
 
     YelpAPIFactory apiFactory = new YelpAPIFactory(Utility.CONSUMER_KEY, Utility.CONSUMER_SECRET, Utility.TOKEN, Utility.TOKEN_SECRET);
     YelpAPI yelpAPI = apiFactory.createAPI();
@@ -52,9 +61,13 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     private Context context;
     private String query;
     private String sort="0";
-    private String maxId;
+    private int offSet=0;
+    private boolean refresh = false;
 
     TextView welcomeText;
+    ProgressBar progressBarFooter;
+    private LinkedList<Business> linkedList;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +87,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         //Find the Recycler view
         recList = (RecyclerView) findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
+
         //We create a LinearLayoutManager and associate this to our RecylerView
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -105,11 +119,21 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 //            recList.setLayoutManager(new StaggeredGridLayoutManager(2, GridLayoutManager.VERTICAL ));
 //        }
 
-        adapter = new BusinessCardAdapter(businesses);
+        adapter = new BusinessCardAdapter(businesses,this);
         recList.setAdapter(adapter);
+        ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(this);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recList);
 
-        if (businesses.size() == 0)
-            welcomeText.setVisibility(View.VISIBLE);
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.btnNext);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SearchActivity.this,PersonalListActivity.class);
+                intent.putExtra("list",linkedList);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -155,32 +179,35 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        businesses.clear();
         searchView.clearFocus();
         this.query = query;
+        refresh = true;
+        adapter.notifyDataSetChanged();
         Toast.makeText(getApplicationContext(), "Searching", Toast.LENGTH_SHORT).show();
         populateList(query,sort,0);
         return true;
     }
 
-    private Map<String, String> setUpParams(String query, String sort,String offset){
+    private Map<String, String> setUpParams(String query, String sort, String offset){
         //We define a Map with all the params We need to seek
         Map<String, String> params = new HashMap<>();
         params.put("term", query);
         //Sort mode: 0=Best matched (default), 1=Distance, 2=Highest Rated.
         params.put("sort", sort);
         params.put("offset", offset);
-        params.put("limit", "20");
+        params.put("limit", "10");
         params.put("lang", "en");
 
         return params;
     }
 
     private void populateList(String query, String sort,int pageAux) {
-        final int page = pageAux;
+
         final int curSize = adapter.getItemCount();
 
         //Getting the Map with all the params
-        Map<String, String> params = setUpParams(query,sort,String.valueOf(curSize));
+        Map<String, String> params = setUpParams(query,sort,String.valueOf(offSet));
 
         //this condition allows us to know if We have network connection.
         // Whether or not We manage what to do in any case
@@ -193,13 +220,29 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
                     ArrayList<Business> newArray = searchResponse.businesses();
 
                     final int size = newArray.size();
-                    Log.d("LIST SIZE", " List size start in:" + size);
+                    offSet=offSet+size;
+                    Log.d(TAG, "Results gotten from the search: " + size);
 
                     businesses.addAll(newArray);
-                    adapter.notifyItemRangeInserted(curSize, size);
-                    //int totalNumberOfResult = searchResponse.total();
 
-                    if (businesses.size()!=0)
+                    //int totalNumberOfResult = searchResponse.total();
+                    SearchActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(refresh){
+                                refresh = false;
+                                if(size>0){
+                                    adapter.notifyItemRangeInserted(0, businesses.size());
+                                }
+                            }
+                            else {
+                                refresh = false;
+                                adapter.notifyItemRangeInserted(curSize, size);
+                            }
+                        }
+                    });
+
+                    if (businesses.size()>0)
                         welcomeText.setVisibility(View.INVISIBLE);
                 }
 
@@ -233,10 +276,12 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     }
 
     private void updateList(){
-        /*recList.setAdapter(new BusinessCardAdapter(businesses));
-        recList.invalidate();
-        if (businesses.size()!=0)
-            welcomeText.setVisibility(View.INVISIBLE);*/
+        refresh = true;
+        businesses.clear();
+        adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
+
+        if (businesses.size()>0)
+            welcomeText.setVisibility(View.INVISIBLE);
     }
 
     public void logOut(View view) {
@@ -252,5 +297,52 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     public void contact(View view){
         Intent intent = new Intent(SearchActivity.this,ContactActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void addToPersonalList(Business business) {
+        if(linkedList==null){
+            linkedList = new LinkedList<Business>();
+        }
+
+        linkedList.add(business);
+        Log.d(TAG,"Business Added - Name: "+linkedList.getLast().name()+" - position:"+linkedList.size());
+
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(businesses, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(businesses, i, i - 1);
+            }
+        }
+        adapter.notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position,int direction) {
+        if(direction==LEFT){
+            Toast.makeText(this,"Eliminated",Toast.LENGTH_SHORT).show();
+        }
+        else if(direction==RIGHT){
+            if(linkedList==null){
+                linkedList = new LinkedList<Business>();
+            }
+            Business business = businesses.get(position);
+            linkedList.add(business);
+            Log.d(TAG,"Business Added - Name: "+linkedList.getLast().name()+" - position:"+linkedList.size());
+        }
+        else{
+            Toast.makeText(this,"Direction changed: "+direction,Toast.LENGTH_LONG).show();
+        }
+        businesses.remove(position);
+        adapter.notifyItemRemoved(position);
+        Log.d(TAG,"DIRECTION: "+direction);
     }
 }

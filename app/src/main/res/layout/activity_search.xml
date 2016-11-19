@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/main_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frame"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="#e5e5e5"
+    android:layout_height="match_parent"
     tools:context="com.codepathgroup5.activities.SearchActivity">
 
     <android.support.v7.widget.RecyclerView
@@ -20,11 +23,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        android:text="Search from yelp in San Jose"
+        android:text="Searching"
         android:layout_gravity="center" />
-</FrameLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="16dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_anchor="@id/cardList"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        app:layout_anchorGravity="bottom|right|end"
+        app:fabSize="mini"
+        app:backgroundTint="@color/colorPrimary"
+        android:layout_alignParentRight="true" />
 
+</android.support.design.widget.CoordinatorLayout>
 
 
 

@@ -1,12 +1,19 @@
 package com.codepathgroup5.adapters;
 
+//import com.yelp.clientlib.entities.Business;
+
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.codepathgroup5.activities.DetailActivity;
@@ -20,12 +27,35 @@ import java.util.List;
  * Created by Swati on 11/15/2016.
  */
 
-public class BusinessCardAdapter extends RecyclerView.Adapter<BusinessCardAdapter.BusinessViewHolder> {
+public class BusinessCardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final String LOG_TAG = BusinessCardAdapter.class.getSimpleName();
     private List<Business> businessList;
+    private AdapterListener adapterListener;
+    private FragmentManager fragmentManager;
+    private Fragment fragment;
+    private Context context;
 
-    public BusinessCardAdapter(List<Business> businessList) {
+
+    //Type of objects we might use
+    private final int VIEWTYPE1 = 0, VIEWTYPE2 = 1;
+
+
+    public interface AdapterListener{
+        void addToPersonalList(Business business);
+    }
+
+    //Constructor
+    public BusinessCardAdapter(List<Business> businessList,AdapterListener adapterListener) {
         this.businessList = businessList;
+        this.adapterListener = adapterListener;
+    }
+    //Constructor2
+    public BusinessCardAdapter(Context context, List<Business> businessList, FragmentManager fragmentManager, Fragment fragment, AdapterListener adapterListener) {
+        this.context = context;
+        this.businessList = businessList;
+        this.adapterListener = adapterListener;
+        this.fragmentManager = fragmentManager;
+        this.fragment = fragment;
     }
 
 
@@ -35,8 +65,40 @@ public class BusinessCardAdapter extends RecyclerView.Adapter<BusinessCardAdapte
     }
 
     @Override
-    public void onBindViewHolder(BusinessViewHolder businessViewHolder, int i) {
-        Business business = businessList.get(i);
+    public int getItemViewType(int position) {
+        return businessList.get(position)==null?VIEWTYPE1:VIEWTYPE2;
+    }
+
+    // Involves populating data into the item through holder
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        // Get the data model based on position
+        Business business = businessList.get(position);
+
+        switch (viewHolder.getItemViewType()) {
+            case VIEWTYPE1:
+                LoadingViewHolder vh1 = (LoadingViewHolder) viewHolder;
+                configureViewHolder1(vh1, position);
+                break;
+            case VIEWTYPE2:
+                BusinessViewHolder vh2 = (BusinessViewHolder) viewHolder;
+                configureViewHolder2(vh2, position);
+                break;
+            default:
+                LoadingViewHolder vh3 = (LoadingViewHolder) viewHolder;
+                configureViewHolder1(vh3, position);
+                break;
+        }
+
+
+    }
+
+    private void configureViewHolder1(LoadingViewHolder loadingViewHolder, int position) {
+        loadingViewHolder.progressBar.setIndeterminate(true);
+    }
+
+    private void configureViewHolder2(BusinessViewHolder businessViewHolder, int position) {
+        final Business business = businessList.get(position);
         businessViewHolder.vName.setText(business.name());
         businessViewHolder.vPhone.setText(business.phone());
         if(business.location().address()!=null && business.location().address().size()>0) {
@@ -53,15 +115,45 @@ public class BusinessCardAdapter extends RecyclerView.Adapter<BusinessCardAdapte
                 .resize(150, 150)
                 .centerCrop()
                 .into(businessViewHolder.vImage);
+
+        businessViewHolder.btnAddToPersonalList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapterListener.addToPersonalList(business);
+            }
+        });
+
     }
 
     @Override
-    public BusinessViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.
-                from(viewGroup.getContext()).
-                inflate(R.layout.business_card, viewGroup, false);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder viewHolder;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        switch (viewType) {
+            case VIEWTYPE1:
+                View v1 = inflater.inflate(R.layout.footer_progress, parent, false);
+                viewHolder = new LoadingViewHolder(v1);
+                break;
+            case VIEWTYPE2:
+                View v2 = inflater.inflate(R.layout.business_card, parent, false);
+                viewHolder = new BusinessViewHolder(v2);
+                break;
+            default:
+                View v3 = inflater.inflate(R.layout.footer_progress, parent, false);
+                viewHolder = new LoadingViewHolder(v3);
+                break;
+        }
 
-        return new BusinessViewHolder(itemView);
+        return viewHolder;
+    }
+
+    public class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public LoadingViewHolder(View itemView) {
+            super(itemView);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.pbFooterLoading);
+        }
     }
 
     public class BusinessViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -70,6 +162,7 @@ public class BusinessCardAdapter extends RecyclerView.Adapter<BusinessCardAdapte
         protected TextView vName;
         protected TextView vPhone;
         protected TextView vAddress;
+        protected Button btnAddToPersonalList;
 
         public BusinessViewHolder(View v) {
             super(v);
@@ -77,6 +170,8 @@ public class BusinessCardAdapter extends RecyclerView.Adapter<BusinessCardAdapte
             vPhone = (TextView)  v.findViewById(R.id.business_phone);
             vAddress = (TextView)  v.findViewById(R.id.business_addr);
             vImage = (ImageView) v.findViewById(R.id.business_thumb);
+            btnAddToPersonalList = (Button) v.findViewById(R.id.btnAdd);
+            //v.setOnClickListener(this);
             v.setOnClickListener(this);
         }
 

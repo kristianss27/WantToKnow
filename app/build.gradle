@@ -29,6 +29,7 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
     compile 'com.parse:parseinterceptors:0.0.2'
+
     //Butterknife a view injection library that allows us avoid BoilerPlate
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
@@ -42,4 +43,6 @@ dependencies {
 
     compile 'com.yelp.clientlib:yelp-android:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    //PagerSlidingTabStrip
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 }
