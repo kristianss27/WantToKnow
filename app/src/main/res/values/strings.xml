@@ -11,4 +11,10 @@
     <string name="action_sort">Sort by Name</string>
     <string name="no_conection">Conection failed</string>
     <string name="no_address">No Address</string>
+    <string name="questionary_description">Describe</string>
+    <string name="next">Next</string>
+    <string name="app_font">Helvetica Neue</string>
+    <string name="interested_in">Are you interested in?</string>
+    <string name="when">When would you want to do it?</string>
+    <string name="how_get_answer">How would you like to get the answer?</string>
 </resources>

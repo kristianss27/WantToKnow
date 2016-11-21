@@ -9,23 +9,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/tvLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
 
     <EditText
-        android:id="@+id/etMessage"
-        android:marqueeRepeatLimit="marquee_forever"
+        android:id="@+id/etDescription"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:cursorVisible="true"
+        android:layout_marginTop="20dp"
+        android:hint="@string/questionary_description"
         android:gravity="top|left"
+        android:layout_below="@id/tvLabel"
+        style="@style/CustomeFont"
         android:textSize="13sp"
+        android:background="@color/medium_green"
         android:textStyle="normal"
         />
 
     <Button
-        android:id="@+id/btnSend"
+        android:id="@+id/btnNext"
         android:textColor="@android:color/white"
-        android:text="@string/send_message"
-        android:background="@color/colorPrimary"
+        android:text="@string/next"
+        android:background="@color/colorPrimaryDark"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_width="60dp"
         android:layout_height="30dp"
@@ -34,9 +44,25 @@
         android:textAllCaps="false"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        android:layout_below="@+id/etMessage"
         android:layout_centerHorizontal="true"
-        android:onClick="sendMessage"
+        android:fontFamily="@string/app_font"
         />
+
+    <TextView
+        android:id="@+id/tvCharacterCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:paddingTop="4dp"
+        tools:text="120"
+        android:layout_alignBaseline="@+id/btnNext"
+        android:layout_alignBottom="@+id/btnNext"
+        android:layout_toLeftOf="@+id/btnNext"
+        android:layout_toStartOf="@+id/btnNext"
+        android:layout_marginEnd="12dp"
+        style="@style/CustomeFont"
+        android:textSize="12sp"
+        />
+
 
 </RelativeLayout>

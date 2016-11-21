@@ -20,6 +20,7 @@
             android:layout_alignParentTop="true"
             android:orientation="horizontal">
 
+            <!-- Add Toolbar-->
 
         </LinearLayout>
 

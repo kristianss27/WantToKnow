@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,9 +22,6 @@ import com.yelp.clientlib.entities.Business;
 
 import java.util.List;
 
-/**
- * Created by Swati on 11/15/2016.
- */
 
 public class BusinessCardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final String LOG_TAG = BusinessCardAdapter.class.getSimpleName();
@@ -116,13 +112,6 @@ public class BusinessCardAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 .centerCrop()
                 .into(businessViewHolder.vImage);
 
-        businessViewHolder.btnAddToPersonalList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapterListener.addToPersonalList(business);
-            }
-        });
-
     }
 
     @Override
@@ -162,7 +151,6 @@ public class BusinessCardAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         protected TextView vName;
         protected TextView vPhone;
         protected TextView vAddress;
-        protected Button btnAddToPersonalList;
 
         public BusinessViewHolder(View v) {
             super(v);
@@ -170,7 +158,6 @@ public class BusinessCardAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             vPhone = (TextView)  v.findViewById(R.id.business_phone);
             vAddress = (TextView)  v.findViewById(R.id.business_addr);
             vImage = (ImageView) v.findViewById(R.id.business_thumb);
-            btnAddToPersonalList = (Button) v.findViewById(R.id.btnAdd);
             //v.setOnClickListener(this);
             v.setOnClickListener(this);
         }

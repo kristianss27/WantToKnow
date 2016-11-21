@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -24,9 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by kristianss27 on 11/18/16.
- */
 
 public class PersonalListFragment extends Fragment implements BusinessCardAdapter.AdapterListener,ItemTouchHelperAdapter {
     private static final String TAG = PersonalListFragment.class.getName();
@@ -36,6 +34,8 @@ public class PersonalListFragment extends Fragment implements BusinessCardAdapte
     private FloatingActionButton btnRequest;
     private RecyclerView rvBusinesses;
     private BusinessCardAdapter adapter;
+
+
 
     // This event fires 1st, before creation of fragment or any views
     // The onAttach method is called when the Fragment instance is associated with an Activity.
@@ -91,6 +91,17 @@ public class PersonalListFragment extends Fragment implements BusinessCardAdapte
         ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(this);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(rvBusinesses);
+
+        btnRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                QuestionaryDialog questionaryDialog = QuestionaryDialog.newInstance();
+                // SETS the target fragment for use later when sending results
+                questionaryDialog.setTargetFragment(PersonalListFragment.this, 300);
+                questionaryDialog.show(fm,"Fragment layout");
+            }
+        });
 
     }
 
