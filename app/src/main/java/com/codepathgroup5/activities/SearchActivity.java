@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
@@ -33,7 +35,6 @@ import com.yelp.clientlib.entities.SearchResponse;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -42,7 +43,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,BusinessCardAdapter.AdapterListener,ItemTouchHelperAdapter
+public class SearchActivity extends AppCompatActivity implements BusinessCardAdapter.AdapterListener,ItemTouchHelperAdapter
     {
     private static final String TAG = "SearchActivity";
     private static final String SAVE_KEY_BUSINESS_LIST = ":MainActivity:businessList";
@@ -68,6 +69,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
     ProgressBar progressBarFooter;
     private LinkedList<Business> linkedList;
     private FloatingActionButton floatingActionButton;
+        private Call<SearchResponse> call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         setContentView(R.layout.activity_search);
         //Set the context
         context = this;
+        //Set up the toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.search_toolbar);
+        toolbar.setTitle("Search");
+        setSupportActionBar(toolbar);
 
         if(savedInstanceState == null){
             businesses = new ArrayList<>();
@@ -129,35 +135,52 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SearchActivity.this,PersonalListActivity.class);
-                intent.putExtra("list",linkedList);
-                startActivity(intent);
+                if(linkedList!=null && linkedList.size()>0) {
+                    cancelYelpCallBack();
+                    Intent intent = new Intent(SearchActivity.this, PersonalListActivity.class);
+                    intent.putExtra("list", linkedList);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(SearchActivity.this,"You should select one item at least",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
 
-        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setOnQueryTextListener(this);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        // Expand the search view and request focus
+        searchItem.expandActionView();
+        searchView.requestFocus();
 
-        return true;
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                return onQueryTextSubmit2(query);
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_sort:
-                Collections.sort(businesses, new Comparator<Business>() {
-                    @Override
-                    public int compare(Business business1, Business business2) {
-                        return business1.name().compareTo(business2.name());
-                    }
-                });
-                updateList();
+
+            case R.id.search:
+                item.expandActionView();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -177,10 +200,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         businesses = (ArrayList<Business>) savedInstanceState.getSerializable(SAVE_KEY_BUSINESS_LIST);
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
+
+    public boolean onQueryTextSubmit2(String query) {
+        cancelYelpCallBack();
         businesses.clear();
-        searchView.clearFocus();
         this.query = query;
         refresh = true;
         adapter.notifyDataSetChanged();
@@ -212,7 +235,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         //this condition allows us to know if We have network connection.
         // Whether or not We manage what to do in any case
         if(networkUtil.connectionPermitted(this)){
-            Call<SearchResponse> call = yelpAPI.search("San Francisco", params);
+            call = yelpAPI.search("San Francisco", params);
             Callback<SearchResponse> callback = new Callback<SearchResponse>() {
                 @Override
                 public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
@@ -257,7 +280,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             call.enqueue(callback);
         }
         else{
-            Toast.makeText(context, "The device has not connection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "The device has bad connection", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -268,11 +291,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         businesses = searchResponse.businesses();
         int totalNumberOfResult = searchResponse.total();
         updateList();
-    }
-
-    @Override
-    public boolean onQueryTextChange(String query) {
-        return false;
     }
 
     private void updateList(){
@@ -294,10 +312,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         }
     }
 
-    public void contact(View view){
-        Intent intent = new Intent(SearchActivity.this,ContactActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     public void addToPersonalList(Business business) {
@@ -345,4 +359,11 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         adapter.notifyItemRemoved(position);
         Log.d(TAG,"DIRECTION: "+direction);
     }
+
+        public void cancelYelpCallBack(){
+            if(call!=null){
+                call.cancel();
+                Log.d(TAG,"Yelp Call canceled: "+call.isCanceled());
+            }
+        }
 }

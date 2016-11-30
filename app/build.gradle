@@ -29,11 +29,14 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
     compile 'com.parse:parseinterceptors:0.0.2'
+    //Facebook Login
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     //Butterknife a view injection library that allows us avoid BoilerPlate
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    //Facebook sdk
-    //compile 'com.facebook.android:facebook-android-sdk:4.+'
+    //Gson library works to transform a jsonResponse to a Java Object
+    compile 'com.google.code.gson:gson:2.7'
+    //Android design
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.android.support:cardview-v7:24.2.0'

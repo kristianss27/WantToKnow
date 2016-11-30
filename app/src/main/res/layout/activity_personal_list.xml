@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/background"
     android:layout_height="match_parent"
     tools:context="com.codepathgroup5.activities.PersonalListActivity">
 
@@ -20,7 +21,10 @@
             android:layout_alignParentTop="true"
             android:orientation="horizontal">
 
-            <!-- Add Toolbar-->
+            <include
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
@@ -30,6 +34,7 @@
             android:layout_height="48dp"
             app:pstsShouldExpand="true"
             app:pstsTextAllCaps="true"
+            android:background="@color/buttons"
             android:layout_below="@id/linear_layout1"/>
 
         <android.support.v4.view.ViewPager

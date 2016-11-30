@@ -1,12 +1,10 @@
 package com.codepathgroup5.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.codepathgroup5.fragments.MessageFragment;
 import com.codepathgroup5.wanttoknow.R;
 
 import butterknife.BindView;
@@ -28,11 +26,6 @@ public class ContactActivity extends AppCompatActivity {
 
         if(savedInstanceState==null) {
             //Create the Message Fragment
-            MessageFragment messageFragment = new MessageFragment();
-            //Display the MessageFragment in the Activity (dinamically)
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.flQuestions, messageFragment);
-            fragmentTransaction.commit();
         }
     }
 
