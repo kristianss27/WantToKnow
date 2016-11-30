@@ -42,7 +42,7 @@ The following **required** functionality is completed:
 * [x] The app provides a way to create that connection between customer and businesses through a list of request that when you can hit the item, you could open a chat with every service contacted
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories: http://g.recordit.co/Kwb6EEdwlv.gif
+Here's a walkthrough of implemented user stories: http://i.imgur.com/KjpkuC6.gif
 
 <[Video Walkthrough} />
 
