@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvNumber"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@color/background"
+        android:text="1"
+        android:textAlignment="center"
+        android:layout_alignParentLeft="true"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="50sp"
+        />
+    <RelativeLayout
+        android:id="@+id/rlRequestDescripcion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="3dp"
+        android:layout_toRightOf="@id/tvNumber"
+        android:layout_alignParentTop="true"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="@string/test_request_body"
+            android:ellipsize="none"
+            android:layout_below="@id/tvUserName"
+            android:autoLink="all"
+            android:linksClickable="true"
+            android:id="@+id/tvRequestDescription"
+            style="@style/CustomeFont"
+            android:textSize="13sp"
+            android:textStyle="normal"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp" />
+    </RelativeLayout>
+
+    <TextView
+    android:id="@+id/tvContact"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Contact by"
+    android:layout_below="@+id/rlRequestDescripcion"
+    android:layout_alignParentEnd="true"
+    android:layout_marginEnd="6dp"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        style="@style/CustomeFont"
+    android:layout_marginTop="5dp"
+        />
+
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="kristianss27@gmail.com"
+        style="@style/CustomeFont"
+        android:textSize="11sp"
+        android:layout_below="@+id/tvContact"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/tvPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+14157894323"
+        style="@style/CustomeFont"
+        android:textSize="11sp"
+        android:layout_below="@+id/tvEmail"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/tvCall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        style="@style/CustomeFont"
+        android:textSize="11sp"
+        android:layout_below="@+id/tvPhone"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="5dp" />
+
+</RelativeLayout>
